@@ -25,9 +25,7 @@ $(OUTPUT).elf: $(STARTUP) main.cpp
 	$(CC) -o $@ $(CFLAGS) -nostartfiles -Wl,-Tlinker_script.ld $^
 
 dump_asm:
-	$(OBJ) -D $(OUTPUT).elf
+	$(OBJ) -S $(OUTPUT).elf
 
 clean:
 	rm -r -f $(OUTPUT).bin $(OUTPUT).elf *.o
-
-
