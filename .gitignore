@@ -1,0 +1,4 @@
+*.swp
+gcc-arm-none-eabi*
+*.bin
+*.elf
