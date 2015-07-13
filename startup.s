@@ -2,8 +2,8 @@
 .cpu cortex-m3
 .thumb
 
-.word    0x20010000  /* stack top address  */
-.word   _start       /* Reset handler      */
+.word   0x20010000   /* stack top address  */
+.word   reset        /* Reset handler      */
 .word   hang         /* NMI handler        */
 .word   hang         /* Hardfault handler  */
 .word   hang         /* Memfault  handler  */
@@ -15,8 +15,10 @@
  */
 
 .thumb_func
-.global _start
-_start:
+.global low_level_init
+.global reset
+reset:
+  bl low_level_init
 	bl main
 	b hang
 

@@ -14,14 +14,10 @@ SECTIONS
 {
     .text :
     {
-        /* All unused bytes set to 0xFF. */
-        FILL (0xff)
-
         /* ISR Vector Table first */
         _isr_vectors_offs = . - 0x08000000;
         KEEP(*(.isr_vector))
 
-        . = ALIGN(4);
         *(.text)        /* Program code */
         *(.text.*)
         *(.rodata)      /* Constants */
@@ -29,38 +25,32 @@ SECTIONS
         *(.rodata*)
         *(.glue_7)
         *(.glue_7t)
-        . = ALIGN(4);
-        _etext = .;
-
-        _sidata = _etext;
-
+        _start_data_wrapper_flash = .;
     } > FLASH
 
     /* Initialized global and static variables */
     .data :
     {
-        FILL (0xff)
-
-        . = ALIGN(4);
-        _sdata = .;
+        start_data = .;
         *(.data)
         *(.data.*)
-        . = ALIGN(4);
-        _edata = .;
+        end_data = .;
 
     } > RAM AT> FLASH
+
+    .data_init :
+    {
+      _end_data_wrapper_flash = .;
+    } > FLASH
 
     /* Uninitialized global and static variables */
     .bss :
     {
-        . = ALIGN(4);
-        _sbss = .;
+        start_bss = .;
         *(.bss)
         *(.bss.*)
         *(COMMON)
-        . = ALIGN(4);
-
-        _ebss = .;
+        end_bss = .;
 
     } > RAM
 
