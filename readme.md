@@ -22,7 +22,7 @@ Flash    | 512 KB                    | 0x0800 0000 - 0x0808 0000
 - [MCU Datasheet](http://www.st.com/web/catalog/mmc/FM141/SC1169/SS1576/LN1531/PF259246?s_searchtype=partnumber)
 
 ## Getting started
-Getting everything setup might present some difficulty depending on how familiar you are with gdb, openocd, and debugging in general for embedded applications. On the high level, you have openocd talking to the STM32 chip over SWD using the on board ST-Link V2. You can actually telnet into the openocd server on port 4444 and do basic functions like flashing the chip, reseting, halting, etc.
+Getting everything setup might present some difficulty depending on how familiar you are with gdb, openocd, and debugging in general for embedded applications. On the high level, you have openocd talking to the STM32 chip over SWD using the on board ST-Link V2. You can actually telnet into the openocd server on port 4444 and do basic functions like flashing the chip, reseting, halting, etc. To compile, flash, and run, just running ```make``` will suffice.
 
 #### Cross Compiler
 Most distro's have an ARM cross compiler in their repository (Arch has [one](https://www.archlinux.org/packages/community/x86_64/arm-none-eabi-gcc/)), but for whatever reason you may want to get an ARM maintained version of GCC [here](https://launchpad.net/gcc-arm-embedded) manually, which is what I am using.
@@ -34,16 +34,7 @@ PATH="$PATH:/home/hak8or/Desktop/arm_embedded/gcc-arm-none-eabi-4_9-2015q2/bin"
 The makefile has most of what we need, with ```reset && make clean && make && make dump_asm``` compiling the project and showing the objdump.
 
 #### Flashing
-To program the chip, we need to start up the openocd server, which is done via ```openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg```. To program the device, we use the opencd server through telent.
-
-```bash
-telnet localhost 4444
-reset halt
-flash probe 0
-stm32f3x mass_erase 0
-flash write_bank 0 main.bin 0
-reset halt
-```
+To program the chip, we just run ```make flash```.
 
 #### GDB
 And now for GDB, which may be problematic depending on which distro you are using since GDB seems to require the 32 bit ncurses library. For example, I am using Arch which requires the following changes:
