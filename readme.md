@@ -59,4 +59,4 @@ Commands           | Description
 ```layout regs```  | Display the registers and source
 ```stepi```        | Single step assembly.
 ```break 5```      | Set a breakpoint on C/C++ source line 5.
-```run```          | Run forever or till we hit a breakpoint.
+```continue```     | Run forever or till we hit a breakpoint.
