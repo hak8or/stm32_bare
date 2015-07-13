@@ -1,7 +1,21 @@
 #include <stdint.h>
 
-unsigned int some_global_var = 5;
-unsigned int some_global_var2 = 0;
+// Let on PA_5
+#define LED_PIN         5
+#define OUTPUT_MODE     (0x01)
+
+// Peripherals.
+#define PERIPH_BASE     0x40000000
+#define AHB2PERIPH_BASE (PERIPH_BASE + 0x08000000)
+
+// Clock gating.
+#define RCC_BASE        0x40021000
+#define RCC_AHBENR      (*(volatile unsigned long*)(RCC_BASE + 0x14))
+
+// GPIOA stuff.
+#define GPIOA_BASE      (AHB2PERIPH_BASE + 0x00)
+#define GPIOA_MODER     (*(volatile unsigned long*)(GPIOA_BASE + 0x00))
+#define GPIOA_ODR       (*(volatile unsigned long*)(GPIOA_BASE + 0x14))
 
 extern uint32_t start_bss;
 extern uint32_t end_bss;
@@ -41,31 +55,26 @@ void low_level_init(void){
 	}
 }
 
-int main(void){
-	volatile int bar = 3;
-
-	int foo = bar;
-	foo = foo << 1;
-	foo = foo + (foo * 2);
-	foo = foo * foo;
-
-	bar = foo;
-
-	if (some_global_var == 0) {
-		while(1){};
-	}
-
-	while(1){
-		int i = 5;
-		i = i + i;
-	}
-
-	return 0;
-}
-
 // Delay a certain number of cycles.
 void delay(unsigned int time) {
 	while (time--);
+}
+
+int main(void){
+	  // Enable clock on GPIOA peripheral
+    RCC_AHBENR = 1 << 17;
+
+		// Make the port pin be an output.
+		GPIOA_MODER |= 0x01 << (LED_PIN * 2);
+
+	while (1) {
+		GPIOA_ODR = 1 << LED_PIN;  // set LED pin high
+		delay(0x3FFFFF);
+		GPIOA_ODR = 0x00;  // set LED pin low
+		delay(0x3FFFFF);
+	}
+
+	return 0;
 }
 
 // Toggle the onboard LED.
