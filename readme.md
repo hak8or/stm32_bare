@@ -46,7 +46,7 @@ yaourt -Syu              # Get the multilib mirror.
 youart -S lib32-ncurses  # Install the 32 bit library.
 ```
 
-And now to start up gdb, you can do ```arm-none-eabi-gdb --eval-command="target remote localhost:3333" firmware.elf``` which loads the elf file including all it's metadata into gdb and talks to openocd over port 3333. Here is a list of commands you can run in GDB, through make sure to use help often because GDB offers a *ton* of functionality.
+Start up openocd using ```openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg``` and to start up gdb do ```arm-none-eabi-gdb --tui --eval-command="target remote localhost:3333" firmware.elf```. This loads the elf file including all it's metadata into gdb and talks to openocd over port 3333. Here is a list of commands you can run in GDB, through make sure to use help often because GDB offers a *ton* of functionality.
 
 Commands           | Description
 ---                | ---
