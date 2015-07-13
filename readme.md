@@ -18,6 +18,7 @@ Flash    | 512 KB                    | 0x0800 0000 - 0x0808 0000
 - [Barebones example](http://wiki.seabright.co.nz/wiki/HelloSTM32.html)
 - [Awesome explanation on SO of barebones example](http://electronics.stackexchange.com/questions/30736/stm32f2-makefile-linker-script-and-start-up-file-combination-without-commercia)
 - [Even awesomer explanation of barebones example](http://fun-tech.se/stm32/linker/index.php)
+- [Another barebones example](http://www.embedds.com/programming-stm32-discovery-using-gnu-tools-startup-code/)
 - [Nucle-F303RE](https://developer.mbed.org/platforms/ST-Nucleo-F303RE/)
 - [MCU Datasheet](http://www.st.com/web/catalog/mmc/FM141/SC1169/SS1576/LN1531/PF259246?s_searchtype=partnumber)
 
@@ -54,7 +55,9 @@ Commands           | Description
 ```mon reg```      | Dumps the registers.
 ```mon reg pc```   | Dumps a specific register, like PC.
 ```display foo```  | Dumps the contents of variable foo.
+```print foo```  | Dumps the contents of variable foo.
 ```info frame```   | Dumps the current stack frame.
+```x 0x20000000``` | Dumps the contents of memory at location.
 ```layout split``` | Display the C/C++ source and assembly view.
 ```layout regs```  | Display the registers and source
 ```stepi```        | Single step assembly.
