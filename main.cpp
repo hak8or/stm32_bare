@@ -2,7 +2,6 @@
 
 // Let on PA_5
 #define LED_PIN         5
-#define OUTPUT_MODE     (0x01)
 
 // Peripherals.
 #define PERIPH_BASE     0x40000000
