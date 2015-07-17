@@ -14,7 +14,7 @@ STARTUP=startup.s
 
 # Flags to specify target, using thumb, enabling all errors,
 # disabling all optimizations, and whatever -g was.
-CFLAGS = -mcpu=cortex-m4 -mthumb -Wall -O0 -g
+CFLAGS = -mcpu=cortex-m3 -mthumb -Wall -O0 -g
 
 # Entry point for our makefile
 all: clean $(OUTPUT).bin flash run
