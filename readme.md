@@ -5,7 +5,7 @@ Barebones STM32 CLI based project for the nucle-F303RE board.
 MCU | STM32F303RET6
 --- | ---
 CPU Core | ARM®32-bit Cortex®-M4 CPU
-Speed    | 72 Mhz
+Speed    | 72 Mhz with 8 Mhz oscillator
 LED pin  | D13 or PA_5
 
 Item     | Size                      | Map
