@@ -9,7 +9,20 @@
 
 // Clock gating.
 #define RCC_BASE        0x40021000
+#define RCC_CR          (*(volatile unsigned long*)(RCC_BASE + 0x00))
+#define RCC_CFGR        (*(volatile unsigned long*)(RCC_BASE + 0x04))
+#define RCC_CFGR2       (*(volatile unsigned long*)(RCC_BASE + 0x2C))
 #define RCC_AHBENR      (*(volatile unsigned long*)(RCC_BASE + 0x14))
+
+#define external_osc    8000000
+
+// PLL settings
+#define PLL_input_clock_x_4       0b0010
+#define PLL_input_clock_x_5       0b0011
+#define PLL_input_clock_x_6       0b0100
+#define PLL_input_clock_x_7       0b0101
+#define PLL_input_clock_x_8       0b0110
+#define PLL_input_clock_x_9       0b0111
 
 // GPIOA stuff.
 #define GPIOA_BASE      (AHB2PERIPH_BASE + 0x00)
@@ -54,29 +67,72 @@ void low_level_init(void){
 	}
 }
 
-// Delay a certain number of cycles.
-void delay(unsigned int time) {
-	while (time--);
+// Delay a certain number of cycles using glorious inline assembly.
+void delay(uint32_t time) {
+	asm volatile(
+		"mov r4, #3                \n" // Divide time by three since the loop is
+		"udiv %[time], %[time], r4 \n" // 3x too slow.
+		"loop:                     \n"
+		"subs %[time], %[time], #1 \n" // 1 cycle
+		"bne loop                  \n" // 1 cycle if not take, 2 if taken.
+		: [time] "+l" (time)           // Put rw input variable time in r0..r7.
+																   // Make it rw and as output so we don't clobber
+		:                              // Time is both input and output.
+		: "r4", "cc"                   // We are clobbering r4 and condition code flags.
+	);
+}
+
+// Enables the external oscillator and PLL to get 72 Mhz full speed arm core,
+// and GPIO Port A clock.
+void clocks_init(void){
+	// Turn on the High Speed External oscillator.
+	RCC_CR = RCC_CR | (1 << 16);
+
+	// Set PREDIV1SRC to external oscillator.
+  RCC_CFGR2 = RCC_CFGR2 | (0 << 16);
+
+	// Set prediv1 to /1.
+  RCC_CFGR2 = RCC_CFGR2 | (0b0000 << 0);
+
+	// Set PLLSRC to be from clock divider 1.
+	RCC_CFGR = RCC_CFGR | (1 << 16);
+
+	// Set the PLLMUL to be x9 (8 Mhz * 4 = 32 Mhz)
+	RCC_CFGR = RCC_CFGR | (PLL_input_clock_x_4 << 18);
+
+	// Turn on the PLL.
+	RCC_CR = RCC_CR | (1 << 24);
+
+	// Have the MCO pin output PLLCLK/2
+	// RCC_CFGR = RCC_CFGR | (0b0111 << 24);
+
+  // Wait a bit for clocks to stabalize.
+	delay(0xFFF);
+
+	// Select PLLCLK for SW leading to the sysclk.
+	RCC_CFGR = RCC_CFGR | 0b10;
+
+	// Enable clock on GPIOA peripheral
+	RCC_AHBENR = 1 << 17;
 }
 
 int main(void){
-	  // Enable clock on GPIOA peripheral
-    RCC_AHBENR = 1 << 17;
+	// Setup all our necessary clocks.
+	clocks_init();
 
-		// Make the port pin be an output.
-		GPIOA_MODER |= 0x01 << (LED_PIN * 2);
+	// What 1 second worth of cycles represents.
+	const uint32_t second_cycles = external_osc * 4;
 
+	// Make the port pin be an output.
+	GPIOA_MODER |= 0x01 << (LED_PIN * 2);
+
+	// Blink the led with a period of 1 second.
 	while (1) {
 		GPIOA_ODR = 1 << LED_PIN;  // set LED pin high
-		delay(0x3FFFFF);
+		delay(second_cycles / 2);
 		GPIOA_ODR = 0x00;  // set LED pin low
-		delay(0x3FFFFF);
+		delay(second_cycles / 2);
 	}
 
 	return 0;
-}
-
-// Toggle the onboard LED.
-void toggle_led(void) {
-
 }
