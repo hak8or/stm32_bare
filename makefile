@@ -17,7 +17,7 @@ STARTUP=startup.s
 CFLAGS = -mcpu=cortex-m4 -mthumb -Wall -O0 -g
 
 # Entry point for our makefile
-all: $(OUTPUT).bin
+all: clean $(OUTPUT).bin flash run
 
 # Create the binary from our ELF file/
 $(OUTPUT).bin: $(OUTPUT).elf
