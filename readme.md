@@ -19,6 +19,7 @@ Flash    | 512 KB                    | 0x0800 0000 - 0x0808 0000
 - [Awesome explanation on SO of barebones example](http://electronics.stackexchange.com/questions/30736/stm32f2-makefile-linker-script-and-start-up-file-combination-without-commercia)
 - [Even awesomer explanation of barebones example](http://fun-tech.se/stm32/linker/index.php)
 - [Another barebones example](http://www.embedds.com/programming-stm32-discovery-using-gnu-tools-startup-code/)
+- [Walkthrough of low level embedded ARM ecosystem](http://regalis.com.pl/en/arm-cortex-stm32-gnulinux/)
 - [Nucle-F303RE](https://developer.mbed.org/platforms/ST-Nucleo-F303RE/)
 - [MCU Datasheet](http://www.st.com/web/catalog/mmc/FM141/SC1169/SS1576/LN1531/PF259246?s_searchtype=partnumber)
 
