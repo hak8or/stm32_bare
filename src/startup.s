@@ -1,27 +1,27 @@
-/* vectors.s */
+/* Interrupt vector table. */
 .cpu cortex-m3
 .thumb
-
-.word   0x20010000   /* stack top address  */
+.word   _estack      /* stack top address  */
 .word   reset        /* Reset handler      */
 .word   hang         /* NMI handler        */
 .word   hang         /* Hardfault handler  */
 .word   hang         /* Memfault  handler  */
 .word   hang         /* Busfault handler   */
 .word   hang         /* Undefined ins      */
+
 /*
  * Remaining interrupts are not used and therefore not included,
- * if needed add them here.
+ * so it's fine if we overwrite their area with instructions.
  */
 
+/* Function defenition for starting up */
 .thumb_func
-.global low_level_init
-.global reset
 reset:
   bl low_level_init
-	bl main
-	b hang
+  bl main
+  b hang
 
+/* Function defenition for hanging */
 .thumb_func
 hang:
 	b .
